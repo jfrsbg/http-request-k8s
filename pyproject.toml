@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "api-request"
+version = "0.1.0"
+description = "Python Dependencies for Acquco"
+authors = ["jfrsbg <comerciall.jeferson@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+httpx = "0.25.1"
+Faker = "20.0.3"
+Flask = "3.0.0"
+polars = "0.19.14"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
