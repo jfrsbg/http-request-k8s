@@ -37,7 +37,27 @@ Suppose the first call to the API will return all pagination links (up to 1000).
     0 0-21/3 * * *
     30 1-22/3 * * *
     ```
-- There'll be a job that will look into a 15 minutes time-window to check whether the processing jobs are marked as "success". If they aren't, all jobs will be added again to the queue to retry one last time. If the job takes again more than 15 minutes to re-process, it'll be marked as "failed". 
+- There'll be a job that will look into a 15 minutes time-window to check whether the processing jobs are marked as "success". If they aren't, all jobs will be added again to the queue to retry one last time. If the job takes again more than 15 minutes to re-process, it'll be marked as "failed". The same job can be used to download the report and verify the request's completion or failure.
+
+#### DynamoDB document
+Below is the DynamoDB document for the life cycle management
+```json
+{
+    "retries": 0-1,
+    "status": queued | processing | success | failed | downloaded,
+    "created_at": timestamp,
+    "job_id": <string>,
+    "report_file_path": <string>,
+    "files_to_process": [<string>]
+}
+```
+
+- retries: It's used for stop trying to re-process. Defaults to 0
+- status: processing status. Defaults to queued
+- created_at: When the job was created. Used for comparisson when checking statuses
+- job_id: job identifier. Can't be null
+- report_files_path: where in s3 the report can be found. Defaults to null
+- files_to_process: array of strings for files that need to be processed
 
 ## Bonus
 - Prometheus can be deployed inside kubernetes to collect metrics from our infrastructure and later create Dashboards and alerts in Grafana to understand which resources we can scale and resize. Understanding these behaviours can save us a lot of money and constantly meet high availability requirements
